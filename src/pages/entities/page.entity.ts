@@ -2,7 +2,7 @@ import { BaseEntity } from '@/common/entities/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { MetaEntity } from '@/metas/entities/meta.entity';
 
-enum PageStatus {
+export enum PageStatus {
   DRAFT = 'DRAFT',
   PUBLISHED = 'PUBLISHED',
 }

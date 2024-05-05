@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePageDto } from './dto/create-page.dto';
 import { Repository } from 'typeorm';
-import { PageEntity } from '@/pages/entities/page.entity';
+import { PageEntity, PageStatus } from '@/pages/entities/page.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MetasService } from '@/metas/metas.service';
 import { UpdatePageDto } from '@/pages/dto/update-page.dto';
@@ -87,5 +87,15 @@ export class PagesService {
     }
 
     return await this.pagesRepository.save(page);
+  }
+
+  // TODO: statue type 안맞으면 오류
+  async updateStatus(id: number, status: PageStatus) {
+    const page = await this.findOne(id);
+    await this.pagesRepository.update(page.id, {
+      status: status,
+    });
+    page.status = status;
+    return page;
   }
 }
