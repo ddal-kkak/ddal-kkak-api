@@ -1,6 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { CreateMetaDto } from './create-meta.dto';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class UpdateMetaDto extends PartialType(CreateMetaDto) {
+export class UpdateMetaDto extends CreateMetaDto {
+  @IsNotEmpty()
+  @IsNumber()
   id: number;
 }

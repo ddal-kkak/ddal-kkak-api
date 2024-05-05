@@ -89,7 +89,6 @@ export class PagesService {
     return await this.pagesRepository.save(page);
   }
 
-  // TODO: statue type 안맞으면 오류
   async updateStatus(id: number, status: PageStatus) {
     const page = await this.findOne(id);
     await this.pagesRepository.update(page.id, {
