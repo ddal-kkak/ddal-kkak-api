@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PagesModule } from './pages/pages.module';
 import { CommonModule } from './common/common.module';
+import { MetasModule } from './metas/metas.module';
 
 @Module({
   imports: [
@@ -14,11 +15,12 @@ import { CommonModule } from './common/common.module';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     PagesModule,
     CommonModule,
+    MetasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
