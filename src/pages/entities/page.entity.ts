@@ -30,5 +30,5 @@ export class PageEntity extends BaseEntity {
   uiJson: Record<string, any>;
 
   @OneToMany(() => MetaEntity, (meta) => meta.page)
-  metas: MetaEntity[];
+  metaTagList: MetaEntity[];
 }

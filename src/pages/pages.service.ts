@@ -43,7 +43,7 @@ export class PagesService {
   findOneWithMetaTag(id: number) {
     return this.pagesRepository.findOne({
       where: { id },
-      relations: ['metas'],
+      relations: ['metaTagList'],
     });
   }
 }

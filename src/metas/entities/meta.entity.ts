@@ -9,6 +9,6 @@ export class MetaEntity extends BaseEntity {
   @Column()
   content: string;
 
-  @ManyToOne(() => PageEntity, (page) => page.metas)
+  @ManyToOne(() => PageEntity, (page) => page.metaTagList)
   page: PageEntity;
 }
