@@ -35,4 +35,15 @@ export class PagesService {
     await this.pagesRepository.save(page);
     return page;
   }
+
+  findAll() {
+    return this.pagesRepository.find();
+  }
+
+  findOneWithMetaTag(id: number) {
+    return this.pagesRepository.findOne({
+      where: { id },
+      relations: ['metas'],
+    });
+  }
 }

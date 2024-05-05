@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { PagesService } from './pages.service';
 import { CreatePageDto } from './dto/create-page.dto';
 
@@ -9,5 +9,15 @@ export class PagesController {
   @Post()
   create(@Body() createPageDto: CreatePageDto) {
     return this.pagesService.create(createPageDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.pagesService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.pagesService.findOneWithMetaTag(+id);
   }
 }
