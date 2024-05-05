@@ -1,1 +1,4 @@
-export class CreateMetaDto {}
+export class CreateMetaDto {
+  property: string;
+  content: string;
+}
