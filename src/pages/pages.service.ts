@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePageDto } from './dto/create-page.dto';
 import { Repository } from 'typeorm';
 import { PageEntity } from '@/pages/entities/page.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MetasService } from '@/metas/metas.service';
-import { CreateMetaDto } from '@/metas/dto/create-meta.dto';
+import { UpdatePageDto } from '@/pages/dto/update-page.dto';
 
 @Injectable()
 export class PagesService {
@@ -17,11 +17,12 @@ export class PagesService {
   async create(createPageDto: CreatePageDto) {
     const page = await this.createPage(createPageDto);
     const { metaTagList } = createPageDto;
-    const returnMetaTagList: CreateMetaDto[] = [];
-    for (const metaTag of metaTagList) {
-      await this.metasService.createMetaTag(page, metaTag);
-      returnMetaTagList.push(metaTag);
-    }
+
+    const metaTagsPromises = metaTagList.map((metaTag) =>
+      this.metasService.createMetaTag(page, metaTag),
+    );
+    const returnMetaTagList = await Promise.all(metaTagsPromises);
+
     return { page, metaTagList: returnMetaTagList };
   }
 
@@ -40,10 +41,51 @@ export class PagesService {
     return this.pagesRepository.find();
   }
 
+  findOne(id: number) {
+    const page = this.pagesRepository.findOne({
+      where: { id },
+    });
+
+    if (!page) {
+      throw new NotFoundException('해당 id 의 page 를 찾을 수 없습니다.');
+    }
+
+    return page;
+  }
+
   findOneWithMetaTag(id: number) {
     return this.pagesRepository.findOne({
       where: { id },
       relations: ['metaTagList'],
     });
+  }
+
+  async update(id: number, updatePageDto: UpdatePageDto) {
+    const { metaTagList, ...pageInfo } = updatePageDto;
+    await this.updatePage(id, pageInfo);
+    await this.metasService.updateMetaTagList(metaTagList);
+
+    return {
+      message: '성공',
+    };
+  }
+
+  async updatePage(
+    id: number,
+    updatePageDto: Omit<UpdatePageDto, 'metaTagList'>,
+  ) {
+    const page = await this.findOne(id);
+
+    if (updatePageDto.title) {
+      page.title = updatePageDto.title;
+    }
+    if (updatePageDto.slug) {
+      page.slug = updatePageDto.slug;
+    }
+    if (updatePageDto.uiJson) {
+      page.uiJson = updatePageDto.uiJson;
+    }
+
+    return await this.pagesRepository.save(page);
   }
 }
