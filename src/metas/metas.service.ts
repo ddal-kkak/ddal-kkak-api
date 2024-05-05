@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MetaEntity } from '@/metas/entities/meta.entity';
 import { Repository } from 'typeorm';
 import { PageEntity } from '@/pages/entities/page.entity';
+import { UpdateMetaDto } from '@/metas/dto/update-meta.dto';
 
 @Injectable()
 export class MetasService {
@@ -33,5 +34,18 @@ export class MetasService {
     });
 
     return this.metasRepository.save(meta);
+  }
+
+  updateMetaTag(updateMetaDto: UpdateMetaDto) {
+    const { id, property, content } = updateMetaDto;
+    return this.metasRepository.update(id, { property, content });
+  }
+
+  updateMetaTagList(updateMetaDtoList: UpdateMetaDto[]) {
+    return Promise.all(
+      updateMetaDtoList.map((updateMetaDto) =>
+        this.updateMetaTag(updateMetaDto),
+      ),
+    );
   }
 }
